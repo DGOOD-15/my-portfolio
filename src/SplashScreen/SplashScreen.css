@@ -1,0 +1,94 @@
+/* Root splash container */
+.splash-screen {
+  background-color: #000;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #39ff14;
+  font-family: "Orbitron", sans-serif;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* SVG text styling */
+.etch-text {
+  width: 80vw;
+  max-width: 900px;
+  height: 160px; /* increase height to fit bigger font */
+  position: relative;
+  margin-bottom: 1rem;
+  stroke: #39ff14;
+  stroke-width: 1.5;
+  fill: none;
+  filter: drop-shadow(0 0 8px #39ff14) drop-shadow(0 0 20px #00ffcc);
+}
+
+/* Etching anim: 3 seconds, starts immediately */
+.etch-text__text {
+  animation: etch 3s forwards ease-out;
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  font-size: 100px;
+}
+
+/* Laser beam starts after 3s (etch finish) */
+.laser-beam {
+  stroke: #39ff14;
+  stroke-width: 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px #39ff14) drop-shadow(0 0 30px #00ffcc);
+
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: laserExpand 1.75s forwards ease-out;
+  animation-delay: 0s;
+}
+
+/* For the left line, reverse the dash direction */
+.laser-beam--left {
+  animation-name: laserExpandLeft;
+}
+
+.laser-beam--right {
+  animation-name: laserExpandRight;
+}
+
+@keyframes laserExpandLeft {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes laserExpandRight {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Etching stroke animation */
+@keyframes etch {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Typing effect text */
+.typing-effect {
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  color: #00ffcc;
+  min-height: 2rem;
+  white-space: nowrap;
+  border-right: 2px solid #00ffcc;
+  animation: blinkCaret 1s step-end infinite;
+  font-weight: 500;
+}
+
+/* Blinking caret animation */
+@keyframes blinkCaret {
+  50% {
+    border-color: transparent;
+  }
+}
