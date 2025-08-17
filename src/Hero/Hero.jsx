@@ -1,3 +1,4 @@
+import About from "../About/About";
 import "./Hero.css";
 
 function Hero() {
@@ -9,6 +10,7 @@ function Hero() {
         <p className="hero__tagline"></p>
         <div className="hero__scroll-indicator"></div>
       </div>
+      <About />
     </section>
   );
 }
