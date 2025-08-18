@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, memo } from "react";
 import "./SplashScreen.css";
 
 const FULL_TEXT = "< Full Stack Software Engineer />";
 
-export default function SplashScreen() {
+function SplashScreen({ fadeOut, onTypingComplete }) {
   const [typedText, setTypedText] = useState("");
   const [startTyping, setStartTyping] = useState(false);
 
   useEffect(() => {
-    // Start typing after etch + laser animations complete (6s)
     const timer = setTimeout(() => {
       setStartTyping(true);
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, []); // Empty dependencies to run only once
 
   useEffect(() => {
     if (!startTyping) return;
@@ -25,6 +24,7 @@ export default function SplashScreen() {
       setTypedText((prev) => {
         if (index >= FULL_TEXT.length) {
           clearInterval(typingInterval);
+          onTypingComplete();
           return prev;
         }
         const next = FULL_TEXT.slice(0, index + 1);
@@ -34,10 +34,10 @@ export default function SplashScreen() {
     }, typingSpeed);
 
     return () => clearInterval(typingInterval);
-  }, [startTyping]);
+  }, [startTyping, onTypingComplete]); // Stable dependencies
 
   return (
-    <div className="splash-screen">
+    <div className={`splash-screen ${fadeOut ? "fade-out" : ""}`}>
       <svg
         className="etch-text"
         viewBox="0 0 1000 200"
@@ -54,8 +54,6 @@ export default function SplashScreen() {
         >
           Dustin Goodwin
         </text>
-
-        {/* Left laser line from center (500) to left (0) */}
         <line
           className="laser-beam laser-beam--left"
           x1="500"
@@ -63,8 +61,6 @@ export default function SplashScreen() {
           x2="0"
           y2="160"
         />
-
-        {/* Right laser line from center (500) to right (1000) */}
         <line
           className="laser-beam laser-beam--right"
           x1="500"
@@ -73,10 +69,11 @@ export default function SplashScreen() {
           y2="160"
         />
       </svg>
-
       <p className="typing-effect" aria-live="polite">
         {typedText}
       </p>
     </div>
   );
 }
+
+export default memo(SplashScreen); // Memoize to prevent unnecessary re-renders

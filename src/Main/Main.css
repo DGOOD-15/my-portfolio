@@ -2,11 +2,9 @@ body,
 #root {
   background: #545454;
   margin: 0;
-  height: 100vh;
   overflow-x: hidden;
 }
 
-/* Fade-out animation for loading screen */
 .loading-screen {
   opacity: 1;
   transition: opacity 1s ease;
@@ -19,12 +17,9 @@ body,
   transition: opacity 1s ease, transform 1s ease;
 }
 
-/* Make sure your main container has a dark background initially */
-/* Main.css or Hero.css */
 .main {
   opacity: 0;
   background: #545454;
-  min-height: 100vh;
   transition: opacity 1s ease;
 }
 
@@ -32,11 +27,10 @@ body,
   opacity: 1;
 }
 
-/* In your Main or Hero CSS */
 main,
 .hero {
-  background: #545454; /* or your splash background color */
-  min-height: 100vh;
+  background: #545454;
+
   opacity: 0;
   animation: fadeIn 1s ease forwards;
 }
