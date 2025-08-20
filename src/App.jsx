@@ -1,91 +1,104 @@
-import React, { useState, useCallback } from "react";
-import Particles from "@tsparticles/react";
-import { tsParticles } from "@tsparticles/engine"; // Use tsParticles
-import SplashScreen from "./SplashScreen/SplashScreen";
+import { useEffect, useState } from "react";
+import { Particles, initParticlesEngine } from "@tsparticles/react";
+import { loadAll } from "@tsparticles/all";
 import Main from "./Main/Main";
 import "./App.css";
 
 function App() {
-  const [fadeOutLoading, setFadeOutLoading] = useState(false);
-  const [showLoading, setShowLoading] = useState(true);
-  const [fadeInMain, setFadeInMain] = useState(false);
+  const [init, setInit] = useState(false);
 
-  const handleTypingComplete = useCallback(() => {
-    console.log("Typing completed, starting fade-out");
-    const fadeTimer = setTimeout(() => {
-      setFadeOutLoading(true);
-    }, 1000);
-    const hideLoadingTimer = setTimeout(() => {
-      setShowLoading(false);
-      setFadeInMain(true);
-    }, 2000);
-
-    return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(hideLoadingTimer);
-    };
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      console.log("Initializing tsParticles engine");
+      await loadAll(engine);
+    }).then(() => {
+      console.log("tsParticles engine initialized");
+      setInit(true);
+    });
   }, []);
 
-  const particlesInit = async () => {
-    console.log("Particles initializing"); // Debug log
-    await tsParticles.load({
-      id: "tsparticles",
-      options: {
-        particles: {
-          number: {
-            value: 50,
-            density: {
-              enable: true,
-              value_area: 800,
-            },
-          },
-          color: {
-            value: "#ffffff",
-          },
-          shape: {
-            type: "circle",
-          },
-          opacity: {
-            value: 0.5,
-            random: true,
-          },
-          size: {
-            value: 3,
-            random: true,
-          },
-          move: {
-            enable: true,
-            speed: 2,
-            direction: "none",
-            random: false,
-            straight: false,
-            out_mode: "out",
-          },
-        },
-        retina_detect: true,
-      },
-    });
+  useEffect(() => {
+    if (!init) return;
+
+    const resizeCanvas = () => {
+      const canvas = document
+        .getElementById("tsparticles")
+        ?.querySelector("canvas");
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        console.log(`Canvas resized to: ${canvas.width}x${canvas.height}`);
+      }
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    return () => window.removeEventListener("resize", resizeCanvas);
+  }, [init]);
+
+  const particlesLoaded = async (container) => {
+    console.log("Particles loaded:", container);
   };
 
-  const particlesLoaded = (container) => {
-    console.log("Particles loaded:", container); // Debug log
+  const options = {
+    background: {
+      color: "#1a1a1a", // Dark background to match neon theme
+    },
+    fpsLimit: 120,
+    particles: {
+      number: {
+        value: 50, // Reduced for performance
+        density: {
+          enable: true,
+          area: 800,
+        },
+      },
+      color: {
+        value: ["#39ff14", "#ffffff"], // Neon green and white stars
+      },
+      shape: {
+        type: "star",
+      },
+      opacity: {
+        value: { min: 0.5, max: 1 }, // Ensure particles are visible
+        random: true,
+      },
+      size: {
+        value: { min: 1, max: 3 },
+        random: true,
+      },
+      move: {
+        enable: true,
+        speed: 0.5,
+        direction: "none",
+        random: true,
+        straight: false,
+        outModes: {
+          default: "out",
+        },
+      },
+    },
+    detectRetina: true,
   };
 
   return (
-    <div className="app-container">
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        loaded={particlesLoaded}
-        className="particles"
-      />
-      {showLoading && (
-        <SplashScreen
-          fadeOut={fadeOutLoading}
-          onTypingComplete={handleTypingComplete}
+    <div className="app">
+      {init && (
+        <Particles
+          id="tsparticles"
+          options={options}
+          particlesLoaded={particlesLoaded}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: -1,
+          }}
         />
       )}
-      <Main fadeIn={fadeInMain} />
+      <Main fadeIn={true} />
     </div>
   );
 }

@@ -10,6 +10,13 @@ body,
   background: #545454;
 }
 
+.app {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 .app-container {
   position: relative;
   min-height: 100vh;
