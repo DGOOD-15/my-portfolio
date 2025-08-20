@@ -11,10 +11,10 @@ export default function About() {
         <div className="about__content">
           <h2 className="about__title">About Me</h2>
           <p className="about__text">
-            I’m Dustin Goodwin, a front-end developer who crafts modern,
-            performance-driven applications with clean design and seamless UX.
-            My focus is blending code and creativity to build experiences that
-            feel both professional and futuristic.
+            I’m Dustin Goodwin, a Full Stack Software Engineer who crafts
+            modern, performance-driven applications with clean design and
+            seamless UX. My focus is blending code and creativity to build
+            experiences that feel both professional and futuristic.
           </p>
         </div>
       </div>
