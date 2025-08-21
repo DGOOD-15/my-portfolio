@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Particles, initParticlesEngine } from "@tsparticles/react";
 import { loadAll } from "@tsparticles/all";
 import Main from "./Main/Main";
+import SplashScreen from "./SplashScreen/SplashScreen";
 import "./App.css";
 
 function App() {
   const [init, setInit] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
+  const [fadeOutLoading, setFadeOutLoading] = useState(false);
+  const [fadeInMain, setFadeInMain] = useState(false);
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -40,6 +44,22 @@ function App() {
     console.log("Particles loaded:", container);
   };
 
+  const handleTypingComplete = useCallback(() => {
+    console.log("Typing completed, starting fade-out");
+    const fadeTimer = setTimeout(() => {
+      setFadeOutLoading(true);
+    }, 1000); // Wait 1s before fading out
+    const hideLoadingTimer = setTimeout(() => {
+      setShowLoading(false);
+      setFadeInMain(true);
+    }, 2000); // Hide splash after 2s, show main
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(hideLoadingTimer);
+    };
+  }, []);
+
   const options = {
     background: {
       color: "#1a1a1a", // Dark background to match neon theme
@@ -47,7 +67,7 @@ function App() {
     fpsLimit: 120,
     particles: {
       number: {
-        value: 50, // Reduced for performance
+        value: 50,
         density: {
           enable: true,
           area: 800,
@@ -60,7 +80,7 @@ function App() {
         type: "star",
       },
       opacity: {
-        value: { min: 0.5, max: 1 }, // Ensure particles are visible
+        value: { min: 0.5, max: 1 },
         random: true,
       },
       size: {
@@ -98,7 +118,13 @@ function App() {
           }}
         />
       )}
-      <Main fadeIn={true} />
+      {showLoading && (
+        <SplashScreen
+          fadeOut={fadeOutLoading}
+          onTypingComplete={handleTypingComplete}
+        />
+      )}
+      <Main fadeIn={fadeInMain} />
     </div>
   );
 }
