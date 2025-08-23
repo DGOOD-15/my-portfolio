@@ -1,40 +1,41 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import "./SplashScreen.css";
 
 const FULL_TEXT = "< Full Stack Software Engineer />";
+const ANIMATION_DELAY = 1500; // 3s etch + 1.75s lasers
 
 function SplashScreen({ fadeOut, onTypingComplete }) {
   const [typedText, setTypedText] = useState("");
   const [startTyping, setStartTyping] = useState(false);
+  const indexRef = useRef(0);
 
+  // Wait until name + lasers finish before typing starts
   useEffect(() => {
     const timer = setTimeout(() => {
       setStartTyping(true);
-    }, 1500);
+    }, ANIMATION_DELAY);
 
     return () => clearTimeout(timer);
-  }, []); // Empty dependencies to run only once
+  }, []);
 
+  // Typing effect
   useEffect(() => {
     if (!startTyping) return;
 
-    let index = 0;
     const typingSpeed = 120;
-    const typingInterval = setInterval(() => {
-      setTypedText((prev) => {
-        if (index >= FULL_TEXT.length) {
-          clearInterval(typingInterval);
-          onTypingComplete();
-          return prev;
-        }
-        const next = FULL_TEXT.slice(0, index + 1);
-        index++;
-        return next;
-      });
+    const interval = setInterval(() => {
+      if (indexRef.current >= FULL_TEXT.length) {
+        clearInterval(interval);
+        onTypingComplete(); // notify parent (App.js)
+        return;
+      }
+
+      setTypedText(FULL_TEXT.slice(0, indexRef.current + 1));
+      indexRef.current++;
     }, typingSpeed);
 
-    return () => clearInterval(typingInterval);
-  }, [startTyping, onTypingComplete]); // Stable dependencies
+    return () => clearInterval(interval);
+  }, [startTyping, onTypingComplete]);
 
   return (
     <div className={`splash-screen ${fadeOut ? "fade-out" : ""}`}>
@@ -42,8 +43,8 @@ function SplashScreen({ fadeOut, onTypingComplete }) {
         className="etch-text"
         viewBox="0 0 1000 200"
         xmlns="http://www.w3.org/2000/svg"
-        aria-label="Dustin Goodwin"
-        role="img"
+        aria-hidden="true"
+        role="presentation"
       >
         <text
           x="50%"
@@ -69,6 +70,8 @@ function SplashScreen({ fadeOut, onTypingComplete }) {
           y2="160"
         />
       </svg>
+
+      {/* Typing effect appears AFTER name + lasers */}
       <p className="typing-effect" aria-live="polite">
         {typedText}
       </p>
@@ -76,4 +79,4 @@ function SplashScreen({ fadeOut, onTypingComplete }) {
   );
 }
 
-export default memo(SplashScreen); // Memoize to prevent unnecessary re-renders
+export default memo(SplashScreen);

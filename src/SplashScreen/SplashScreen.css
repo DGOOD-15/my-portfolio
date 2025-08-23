@@ -74,16 +74,25 @@
   }
 }
 
-/* Typing effect text */
 .typing-effect {
   font-size: 1.5rem;
   letter-spacing: 0.1em;
   color: #00ffcc;
   min-height: 2rem;
   white-space: nowrap;
-  border-right: 2px solid #00ffcc;
-  animation: blinkCaret 1s step-end infinite;
   font-weight: 500;
+  z-index: 10;
+
+  border-right: none; /* hide cursor at start */
+  animation: showCaret 0s 1s forwards, blinkCaret 1s step-end infinite 1s;
+  /* ^ wait 1s before showing caret + blinking */
+}
+
+/* Animation to "turn on" the caret after 1s */
+@keyframes showCaret {
+  to {
+    border-right: 2px solid #00ffcc;
+  }
 }
 
 /* Blinking caret animation */
