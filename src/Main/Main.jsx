@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Hero from "../Hero/Hero";
 import Projects from "../Projects/Projects";
+import SkillsCarousel from "../SkillsCarousel/SkillsCarousel";
 import "./Main.css";
 
 function Main({ fadeIn }) {
@@ -42,6 +43,14 @@ function Main({ fadeIn }) {
         variants={sectionVariants}
       >
         <Projects />
+      </motion.div>
+      <motion.div
+        ref={projectsRef}
+        initial="hidden"
+        animate={projectsInView ? "visible" : "hidden"}
+        variants={sectionVariants}
+      >
+        <SkillsCarousel />
       </motion.div>
     </main>
   );
