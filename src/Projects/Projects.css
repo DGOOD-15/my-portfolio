@@ -88,3 +88,34 @@
   color: #ccc;
   line-height: 1.4;
 }
+
+/* ...existing code... */
+
+@media screen and (max-width: 600px) {
+  .projects {
+    padding: 2rem 0.5rem;
+  }
+
+  .projects__container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .projects__card {
+    height: 160px;
+    max-width: 100%;
+  }
+
+  .projects__title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .projects__name {
+    font-size: 1rem;
+  }
+
+  .projects__desc {
+    font-size: 0.85rem;
+  }
+}

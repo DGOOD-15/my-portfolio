@@ -101,3 +101,17 @@
     border-color: transparent;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .splash-screen {
+    padding: 1rem;
+  }
+
+  .etch-text {
+    font-size: 80px;
+  }
+
+  .typing-effect {
+    font-size: 1.2rem;
+  }
+}
